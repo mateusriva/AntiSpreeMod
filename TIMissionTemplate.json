@@ -1,0 +1,12 @@
+[
+    {
+        "dataName": "Assassinate",
+        "resolutionMethod": {
+            "defendingModifiers": [
+                {
+                    "$type": "TIMissionModifier_RecentAssassination"
+                }
+            ]
+        }
+    }
+]
