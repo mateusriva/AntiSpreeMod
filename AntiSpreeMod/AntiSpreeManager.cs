@@ -98,6 +98,9 @@ namespace AntiSpreeMod
         public void UpdateFactionLastAssassinationDate(TIFactionState faction)
         {
             FileLog.Log("Entered the Manager Update");
+            FileLog.Log("AntiSpreeStateList is " + AntiSpreeStateList.ToString());
+            FileLog.Log("faction is " + faction.ToString());
+            FileLog.Log("faction.ID is " + faction.ID.ToString());
             if (AntiSpreeStateList.ContainsKey(faction.ID))
             {
                 FileLog.Log("Key was there");

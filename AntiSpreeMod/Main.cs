@@ -100,10 +100,13 @@ namespace AntiSpreeMod
                 if (outcome == TIMissionOutcome.Success || outcome == TIMissionOutcome.CriticalSuccess)
                 {
                     FileLog.Log("Entered Success Condition");
+                    FileLog.Log("Target is " + target.ToString());
+                    FileLog.Log("Target ref_councilor is " + target.ref_councilor.ToString());
+                    FileLog.Log("Target ref_councilor faction is " + target.ref_councilor.faction.ToString());
                     // Get current mission phase and store it in the faction state
-                    AntiSpreeManagerExternalMethods.UpdateFactionLastAssassinationDate(target.ref_faction);
-                    FileLog.Log("Stored Assassination of faction " + target.ref_faction.ToString());
-                    FileLog.Log("Stored at date " + AntiSpreeManagerExternalMethods.GetFactionLastAssassinationDate(target.ref_faction));
+                    AntiSpreeManagerExternalMethods.UpdateFactionLastAssassinationDate(target.ref_councilor.faction);
+                    FileLog.Log("Stored Assassination of faction " + target.ref_councilor.faction.ToString());
+                    FileLog.Log("Stored at date " + AntiSpreeManagerExternalMethods.GetFactionLastAssassinationDate(target.ref_councilor.faction));
                 }
             }
         }
