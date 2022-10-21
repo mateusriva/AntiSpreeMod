@@ -1,0 +1,3 @@
+TIMissionTemplate_RecentAssassination.displayName=Assassinat Récent
+TIMissionTemplate_RecentTakeover.displayName=Prise de Contrôle Récente
+TIMissionTemplate_RecentSabotage.displayName=Sabotage Récente
