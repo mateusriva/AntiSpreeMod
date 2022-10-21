@@ -185,14 +185,6 @@ public class TIMissionModifier_RecentAssassination : TIMissionModifier
         return malus;
 
     }
-
-    public override string displayName
-    {
-        get
-        {
-            return "Recent Assassination";
-        }
-    }
 }
 
 
@@ -224,14 +216,6 @@ public class TIMissionModifier_RecentTakeover : TIMissionModifier
         return malus;
 
     }
-
-    public override string displayName
-    {
-        get
-        {
-            return "Recent Takeover";
-        }
-    }
 }
 
 
@@ -253,13 +237,5 @@ public class TIMissionModifier_RecentSabotage : TIMissionModifier
 
         return malus;
 
-    }
-
-    public override string displayName
-    {
-        get
-        {
-            return "Recent Sabotage";
-        }
     }
 }
