@@ -88,10 +88,10 @@ namespace AntiSpreeMod
 
     // Harmony patch
     // Stores last assassination for a faction
-    [HarmonyPatch(typeof(TIMissionEffect_Assassinate), nameof(TIMissionEffect_Assassinate.ApplyDelayedEffect))]
+    [HarmonyPatch(typeof(TIMissionEffect_Assassinate), nameof(TIMissionEffect_Assassinate.ApplyEffect))]
     static class StoreLastAssassinationPhasePatch
     {
-        static void Postfix(TIMissionState mission, TIGameState target, TIMissionOutcome outcome, string dataName, TIMissionEffect_Assassinate __instance)
+        static void Postfix(TIMissionState mission, TIGameState target, TIMissionOutcome outcome, TIMissionEffect_Assassinate __instance)
         {
             if (Main.enabled)
             {
