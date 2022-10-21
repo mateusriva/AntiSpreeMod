@@ -3,7 +3,7 @@
 	"DisplayName": "Anti Spree",
 	"title": "Anti Spree",
 	"author": "Mar Ee",
-	"description": "Adds a malus to subsequent assassinations, to impede the player from completely shutting down another faction, simulating a state of high alert after another colleague got killed.",
+	"description": "Adds a malus to subsequent assassinations and takeovers, to impede the player from completely shutting down another faction, simulating a state of high alert after another colleague got killed.",
 	"Version": "0.1",
 	"Requirements": [],
 	"ManagerVersion": "0.24.0.0",

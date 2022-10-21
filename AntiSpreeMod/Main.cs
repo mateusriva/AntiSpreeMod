@@ -53,10 +53,12 @@ namespace AntiSpreeMod
     public class Settings : UnityModManager.ModSettings, IDrawable
     {
         //TODO: switch to localization once it is available
+        [Header("Assassinations"), Space(5)]
         [Draw("Recent Assassination Malus", Collapsible = true)] public int recentAssassinationMalus = 10;
         [Draw("Assassination Malus Decay each 15 days", Collapsible = true)] public int assassinationMalusDecay = 2;
         [Draw("Assassination Malus Caps to Security Maximum", Collapsible = true)] public bool assassinationMalusCap = true;
 
+        [Header("Hostile Takeovers"), Space(5)]
         [Draw("Recent Takeover Malus", Collapsible = true)] public int recentTakeoverMalus = 8;
         [Draw("Takeover Malus Decay each 15 days", Collapsible = true)] public int takeoverMalusDecay = 2;
         [Draw("Takeover Malus Caps to Security Maximum", Collapsible = true)] public bool takeoverMalusCap = true;
