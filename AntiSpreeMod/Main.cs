@@ -111,4 +111,34 @@ namespace AntiSpreeMod
             }
         }
     }
+
+    // TIMissionModifier for the recent assassination malus
+    public class TIMissionModifier_RecentAssassination : TIMissionModifier
+    {
+        public override float GetModifier(TICouncilorState attackingCouncilor, TIGameState target = null, float resourcesSpent = 0, FactionResource resource = FactionResource.None)
+        {
+            int current_date = GameStateManager.Time().daysInCampaign;
+            int lastAssassinationDate = (int)AntiSpreeManagerExternalMethods.GetFactionLastAssassinationDate(target.ref_councilor.faction);
+            float target_security = (float) target.ref_councilor.GetAttribute(CouncilorAttribute.Security);
+            int maxCouncilorAttribute = TemplateManager.global.maxCouncilorAttribute;
+
+            // Compute malus
+            float malus = Main.settings.recentAssassinationMalus - ((Main.settings.assassinationMalusDecay/14f)*(current_date-lastAssassinationDate));
+            if (malus < 0f) { malus = 0f; }  // Can't be less than zero
+
+            // If capped, cap to security
+            if (Main.settings.assassinationMalusCap)
+            {
+                if (malus + target_security > maxCouncilorAttribute)
+                {
+                    malus = maxCouncilorAttribute - (float)target_security;
+                }
+            }
+            return malus;
+
+        }
+    }
+
+    // Harmony patch
+    // Adds a mission modifier which considers recent assassinations
 }
