@@ -13,6 +13,8 @@ namespace AntiSpreeMod
         public int LastAssassinationDate { get; set; } = -1;
         [SerializeField]
         public int LastTakeoverDate { get; set; } = -1;
+        [SerializeField]
+        public int LastSabotageDate { get; set; } = -1;
 
 
         public void SetAssassinationToNow()
@@ -22,6 +24,10 @@ namespace AntiSpreeMod
         public void SetTakeoverToNow()
         {
             LastTakeoverDate = GameStateManager.Time().daysInCampaign;
+        }
+        public void SetSabotageToNow()
+        {
+            LastSabotageDate = GameStateManager.Time().daysInCampaign;
         }
 
         public AntiSpreeState ref_antiSpreeState
@@ -41,6 +47,7 @@ namespace AntiSpreeMod
                 this.templateName = faction.template.dataName;
                 this.LastAssassinationDate = LastAssassinationDate;
                 this.LastTakeoverDate = LastTakeoverDate;
+                this.LastSabotageDate = LastSabotageDate;
             }
         }
     }

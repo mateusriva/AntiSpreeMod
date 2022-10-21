@@ -62,7 +62,11 @@ namespace AntiSpreeMod
         [Draw("Recent Takeover Malus", Collapsible = true)] public int recentTakeoverMalus = 8;
         [Draw("Takeover Malus Decay each 15 days", Collapsible = true)] public int takeoverMalusDecay = 2;
         [Draw("Takeover Malus Caps to Security Maximum", Collapsible = true)] public bool takeoverMalusCap = true;
-        
+
+        [Header("Project Sabotage"), Space(5)]
+        [Draw("Recent Sabotage Malus", Collapsible = true)] public int recentSabotageMalus = 14;
+        [Draw("Sabotage Malus Decay each 15 days", Collapsible = true)] public int sabotageMalusDecay = 1;
+
 
         //Boilerplate code to save your settings to a Settings.xml file when changed
         public override void Save(UnityModManager.ModEntry modEntry)
@@ -131,6 +135,25 @@ namespace AntiSpreeMod
             }
         }
     }
+
+    // Harmony patch
+    // Stores last Sabotage for a faction
+    [HarmonyPatch(typeof(TIMissionEffect_SabotageProject), nameof(TIMissionEffect_SabotageProject.ApplyEffect))]
+    static class StoreLastSabotagePhasePatch
+    {
+        static void Postfix(TIMissionState mission, TIGameState target, TIMissionOutcome outcome, TIMissionEffect_Assassinate __instance)
+        {
+            if (Main.enabled)
+            {
+                // If Sabotage was a success...
+                if (outcome == TIMissionOutcome.Success || outcome == TIMissionOutcome.CriticalSuccess)
+                {
+                    // Get current mission phase and store it in the faction state
+                    AntiSpreeManagerExternalMethods.UpdateFactionLastSabotageDate(target.ref_faction);
+                }
+            }
+        }
+    }
 }
 
 
@@ -187,7 +210,7 @@ public class TIMissionModifier_RecentTakeover : TIMissionModifier
         if (lastTakeoverDate < 0) { return 0f; }
 
         // Compute malus
-        float malus = Main.settings.recentTakeoverMalus - ((Main.settings.takeoverMalusDecay/ 15f) * (current_date - lastTakeoverDate));
+        float malus = Main.settings.recentTakeoverMalus - ((Main.settings.takeoverMalusDecay / 15f) * (current_date - lastTakeoverDate));
         if (malus < 0f) { malus = 0f; }  // Can't be less than zero
 
         // If capped, cap to security
@@ -207,6 +230,36 @@ public class TIMissionModifier_RecentTakeover : TIMissionModifier
         get
         {
             return "Recent Takeover";
+        }
+    }
+}
+
+
+
+// TIMissionModifier for the recent Sabotage malus
+public class TIMissionModifier_RecentSabotage : TIMissionModifier
+{
+    public override float GetModifier(TICouncilorState attackingCouncilor, TIGameState target = null, float resourcesSpent = 0, FactionResource resource = FactionResource.None)
+    {
+        int current_date = GameStateManager.Time().daysInCampaign;
+        int lastSabotageDate = (int)AntiSpreeManagerExternalMethods.GetFactionLastSabotageDate(target.ref_faction);
+
+        // If no Sabotages yet, no malus
+        if (lastSabotageDate < 0) { return 0f; }
+
+        // Compute malus
+        float malus = Main.settings.recentSabotageMalus - ((Main.settings.sabotageMalusDecay / 15f) * (current_date - lastSabotageDate));
+        if (malus < 0f) { malus = 0f; }  // Can't be less than zero
+
+        return malus;
+
+    }
+
+    public override string displayName
+    {
+        get
+        {
+            return "Recent Sabotage";
         }
     }
 }

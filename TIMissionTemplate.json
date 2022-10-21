@@ -80,5 +80,46 @@
                 }
             ]
         }
+    },
+    {
+        "dataName": "SabotageProject",
+        "resolutionMethod": {
+            "defendingModifiers": [
+                {
+                    "$type": "TIMissionModifier_FlatModifier",
+                    "flatModifier": 6,
+                    "defenderAttribute": ""
+                },
+                {
+                    "$type": "TIMissionModifier_CouncilorDefendStat",
+                    "defenderAttribute": "Security"
+                },
+                {
+                    "$type": "TIMissionModifier_ProtectionBonus",
+                    "defenderAttribute": "Security"
+                },
+                {
+                    "$type": "TIMissionModifier_SpaceSupportShortage"
+                },
+                {
+                    "$type": "TIMissionModifier_RecentSabotage"
+                },
+                {
+                    "$type": ""
+                },
+                {
+                    "$type": ""
+                },
+                {
+                    "$type": ""
+                },
+                {
+                    "$type": ""
+                },
+                {
+                    "$type": ""
+                }
+            ]
+        }
     }
 ]

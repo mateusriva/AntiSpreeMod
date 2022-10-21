@@ -35,6 +35,16 @@ namespace AntiSpreeMod
         }
 
         /// <summary>
+        /// Returns the last Sabotage of a faction by its instance
+        /// </summary>
+        /// <param name="faction">The TIFactionState instance</param>
+        /// <returns></returns>
+        public static int? GetFactionLastSabotageDate(TIFactionState faction)
+        {
+            return Manager[faction].LastSabotageDate;
+        }
+
+        /// <summary>
         /// Removes a faction from the register
         /// </summary>
         /// <param name="faction">The TIFactionState instance</param>
@@ -68,6 +78,16 @@ namespace AntiSpreeMod
         public static void UpdateFactionLastTakeoverDate(TIFactionState faction)
         {
             Manager.UpdateFactionLastTakeoverDate(faction);
+        }
+
+
+        /// <summary>
+        /// Updates last Sabotage
+        /// </summary>
+        /// <param name="faction">The TIFactionState instance</param>
+        public static void UpdateFactionLastSabotageDate(TIFactionState faction)
+        {
+            Manager.UpdateFactionLastSabotageDate(faction);
         }
     }
 }

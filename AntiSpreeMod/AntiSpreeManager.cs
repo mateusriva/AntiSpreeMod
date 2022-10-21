@@ -124,5 +124,23 @@ namespace AntiSpreeMod
                 this[faction].SetTakeoverToNow();
             }
         }
+
+
+        /// <summary>
+        /// Set last Sabotage to today
+        /// </summary>
+        /// <param name="faction"></param>
+        public void UpdateFactionLastSabotageDate(TIFactionState faction)
+        {
+            if (AntiSpreeStateList.ContainsKey(faction.ID))
+            {
+                this[faction].SetSabotageToNow();
+            }
+            else
+            {
+                RegisterList(faction);
+                this[faction].SetSabotageToNow();
+            }
+        }
     }
 }
