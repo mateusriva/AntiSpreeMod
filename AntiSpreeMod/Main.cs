@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityModManagerNet;
 using System.Reflection;
 using PavonisInteractive.TerraInvicta;
+using AntiSpreeMod;
 
 namespace AntiSpreeMod
 {
@@ -52,9 +53,14 @@ namespace AntiSpreeMod
     public class Settings : UnityModManager.ModSettings, IDrawable
     {
         //TODO: switch to localization once it is available
-        [Draw("Recent Assassination Malus", Collapsible = true)] public int recentAssassinationMalus = 8;
-        [Draw("Assassination Malus Decay/Phase", Collapsible = true)] public int assassinationMalusDecay = 2;
-        [Draw("Assassination Malus + Security Caps to 25", Collapsible = true)] public bool assassinationMalusCap = true;
+        [Draw("Recent Assassination Malus", Collapsible = true)] public int recentAssassinationMalus = 10;
+        [Draw("Assassination Malus Decay each 15 days", Collapsible = true)] public int assassinationMalusDecay = 2;
+        [Draw("Assassination Malus Caps to Security Maximum", Collapsible = true)] public bool assassinationMalusCap = true;
+
+        [Draw("Recent Takeover Malus", Collapsible = true)] public int recentTakeoverMalus = 8;
+        [Draw("Takeover Malus Decay each 15 days", Collapsible = true)] public int takeoverMalusDecay = 2;
+        [Draw("Takeover Malus Caps to Security Maximum", Collapsible = true)] public bool takeoverMalusCap = true;
+        
 
         //Boilerplate code to save your settings to a Settings.xml file when changed
         public override void Save(UnityModManager.ModEntry modEntry)
@@ -95,50 +101,110 @@ namespace AntiSpreeMod
         {
             if (Main.enabled)
             {
-                FileLog.Log("Got to the postfix");
                 // If assassination was a success...
                 if (outcome == TIMissionOutcome.Success || outcome == TIMissionOutcome.CriticalSuccess)
                 {
-                    FileLog.Log("Entered Success Condition");
-                    FileLog.Log("Target is " + target.ToString());
-                    FileLog.Log("Target ref_councilor is " + target.ref_councilor.ToString());
-                    FileLog.Log("Target ref_councilor faction is " + target.ref_councilor.faction.ToString());
                     // Get current mission phase and store it in the faction state
                     AntiSpreeManagerExternalMethods.UpdateFactionLastAssassinationDate(target.ref_councilor.faction);
-                    FileLog.Log("Stored Assassination of faction " + target.ref_councilor.faction.ToString());
-                    FileLog.Log("Stored at date " + AntiSpreeManagerExternalMethods.GetFactionLastAssassinationDate(target.ref_councilor.faction));
                 }
             }
-        }
-    }
-
-    // TIMissionModifier for the recent assassination malus
-    public class TIMissionModifier_RecentAssassination : TIMissionModifier
-    {
-        public override float GetModifier(TICouncilorState attackingCouncilor, TIGameState target = null, float resourcesSpent = 0, FactionResource resource = FactionResource.None)
-        {
-            int current_date = GameStateManager.Time().daysInCampaign;
-            int lastAssassinationDate = (int)AntiSpreeManagerExternalMethods.GetFactionLastAssassinationDate(target.ref_councilor.faction);
-            float target_security = (float) target.ref_councilor.GetAttribute(CouncilorAttribute.Security);
-            int maxCouncilorAttribute = TemplateManager.global.maxCouncilorAttribute;
-
-            // Compute malus
-            float malus = Main.settings.recentAssassinationMalus - ((Main.settings.assassinationMalusDecay/14f)*(current_date-lastAssassinationDate));
-            if (malus < 0f) { malus = 0f; }  // Can't be less than zero
-
-            // If capped, cap to security
-            if (Main.settings.assassinationMalusCap)
-            {
-                if (malus + target_security > maxCouncilorAttribute)
-                {
-                    malus = maxCouncilorAttribute - (float)target_security;
-                }
-            }
-            return malus;
-
         }
     }
 
     // Harmony patch
-    // Adds a mission modifier which considers recent assassinations
+    // Stores last takeover for a faction
+    [HarmonyPatch(typeof(TIMissionEffect_HostileTakeover), nameof(TIMissionEffect_HostileTakeover.ApplyEffect))]
+    static class StoreLastTakeoverPhasePatch
+    {
+        static void Postfix(TIMissionState mission, TIGameState target, TIMissionOutcome outcome, TIMissionEffect_Assassinate __instance)
+        {
+            if (Main.enabled)
+            {
+                // If takeover was a success...
+                if (outcome == TIMissionOutcome.Success || outcome == TIMissionOutcome.CriticalSuccess)
+                {
+                    // Get current mission phase and store it in the faction state
+                    AntiSpreeManagerExternalMethods.UpdateFactionLastTakeoverDate(target.ref_faction);
+                }
+            }
+        }
+    }
+}
+
+
+// TIMissionModifier for the recent assassination malus
+public class TIMissionModifier_RecentAssassination : TIMissionModifier
+{
+    public override float GetModifier(TICouncilorState attackingCouncilor, TIGameState target = null, float resourcesSpent = 0, FactionResource resource = FactionResource.None)
+    {
+        int current_date = GameStateManager.Time().daysInCampaign;
+        int lastAssassinationDate = (int)AntiSpreeManagerExternalMethods.GetFactionLastAssassinationDate(target.ref_councilor.faction);
+        float target_security = (float)target.ref_councilor.GetAttribute(CouncilorAttribute.Security);
+        int maxCouncilorAttribute = TemplateManager.global.maxCouncilorAttribute;
+
+        // If no assassinations yet, no malus
+        if (lastAssassinationDate < 0) { return 0f; }
+
+        // Compute malus
+        float malus = Main.settings.recentAssassinationMalus - ((Main.settings.assassinationMalusDecay / 15f) * (current_date - lastAssassinationDate));
+        if (malus < 0f) { malus = 0f; }  // Can't be less than zero
+
+        // If capped, cap to security
+        if (Main.settings.assassinationMalusCap)
+        {
+            if (malus + target_security > maxCouncilorAttribute)
+            {
+                malus = maxCouncilorAttribute - (float)target_security;
+            }
+        }
+        return malus;
+
+    }
+
+    public override string displayName
+    {
+        get
+        {
+            return "Recent Assassination";
+        }
+    }
+}
+
+
+// TIMissionModifier for the recent takeover malus
+public class TIMissionModifier_RecentTakeover : TIMissionModifier
+{
+    public override float GetModifier(TICouncilorState attackingCouncilor, TIGameState target = null, float resourcesSpent = 0, FactionResource resource = FactionResource.None)
+    {
+        int current_date = GameStateManager.Time().daysInCampaign;
+        int lastTakeoverDate = (int)AntiSpreeManagerExternalMethods.GetFactionLastTakeoverDate(target.ref_faction);
+        float target_administration = (float)target.ref_councilor.GetAttribute(CouncilorAttribute.Administration);
+        int maxCouncilorAttribute = TemplateManager.global.maxCouncilorAttribute;
+
+        // If no takeovers yet, no malus
+        if (lastTakeoverDate < 0) { return 0f; }
+
+        // Compute malus
+        float malus = Main.settings.recentTakeoverMalus - ((Main.settings.takeoverMalusDecay/ 15f) * (current_date - lastTakeoverDate));
+        if (malus < 0f) { malus = 0f; }  // Can't be less than zero
+
+        // If capped, cap to security
+        if (Main.settings.takeoverMalusCap)
+        {
+            if (malus + target_administration > maxCouncilorAttribute)
+            {
+                malus = maxCouncilorAttribute - (float)target_administration;
+            }
+        }
+        return malus;
+
+    }
+
+    public override string displayName
+    {
+        get
+        {
+            return "Recent Takeover";
+        }
+    }
 }

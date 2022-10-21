@@ -15,13 +15,23 @@ namespace AntiSpreeMod
         public static AntiSpreeManager Manager = new AntiSpreeManager();
 
         /// <summary>
-        /// Returns the level of a faction by its instance
+        /// Returns the last murder in a faction by its instance
         /// </summary>
         /// <param name="faction">The TIFactionState instance</param>
         /// <returns></returns>
         public static int? GetFactionLastAssassinationDate(TIFactionState faction)
         {
             return Manager[faction].LastAssassinationDate;
+        }
+
+        /// <summary>
+        /// Returns the last takeover of a faction by its instance
+        /// </summary>
+        /// <param name="faction">The TIFactionState instance</param>
+        /// <returns></returns>
+        public static int? GetFactionLastTakeoverDate(TIFactionState faction)
+        {
+            return Manager[faction].LastTakeoverDate;
         }
 
         /// <summary>
@@ -37,9 +47,9 @@ namespace AntiSpreeMod
         /// Increments or adds a faction to the register
         /// </summary>
         /// <param name="faction">The TIFactionState instance</param>
-        public static void AddFactionRegister(TIFactionState faction, AntiSpreeState lastAssassinationDate = null)
+        public static void AddFactionRegister(TIFactionState faction, AntiSpreeState currentSpreeState = null)
         {
-            Manager.RegisterList(faction, lastAssassinationDate);
+            Manager.RegisterList(faction, currentSpreeState);
         }
 
         /// <summary>
@@ -49,6 +59,15 @@ namespace AntiSpreeMod
         public static void UpdateFactionLastAssassinationDate(TIFactionState faction)
         {
             Manager.UpdateFactionLastAssassinationDate(faction);
+        }
+
+        /// <summary>
+        /// Updates last takeover
+        /// </summary>
+        /// <param name="faction">The TIFactionState instance</param>
+        public static void UpdateFactionLastTakeoverDate(TIFactionState faction)
+        {
+            Manager.UpdateFactionLastTakeoverDate(faction);
         }
     }
 }

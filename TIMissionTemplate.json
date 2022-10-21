@@ -4,7 +4,79 @@
         "resolutionMethod": {
             "defendingModifiers": [
                 {
+                    "$type": "TIMissionModifier_FlatModifier",
+                    "flatModifier": 12,
+                    "defenderAttribute": ""
+                },
+                {
+                    "$type": "TIMissionModifier_CouncilorDefendStat",
+                    "defenderAttribute": "Security"
+                },
+                {
+                    "$type": "TIMissionModifier_ProtectionBonus",
+                    "defenderAttribute": "Security"
+                },
+                {
+                    "$type": "TIMissionModifier_DefenderLocalControlPoints"
+                },
+                {
+                    "$type": "TIMissionModifier_AliensRemoved"
+                },
+                {
+                    "$type": "TIMissionModifier_MyFactionLoyaltyMonitor"
+                },
+                {
                     "$type": "TIMissionModifier_RecentAssassination"
+                },
+                {
+                    "$type": ""
+                },
+                {
+                    "$type": ""
+                },
+                {
+                    "$type": ""
+                }
+            ]
+        }
+    },
+    {
+        "dataName": "HostileTakeover",
+        "resolutionMethod": {
+            "defendingModifiers": [
+                {
+                    "$type": "TIMissionModifier_FlatModifier",
+                    "flatModifier": 12,
+                    "defenderAttribute": ""
+                },
+                {
+                    "$type": "TIMissionModifier_CouncilorDefendStat",
+                    "defenderAttribute": "Administration"
+                },
+                {
+                    "$type": "TIMissionModifier_NationalIndustries_Def",
+                    "defenderAttribute": ""
+                },
+                {
+                    "$type": "TIMissionModifier_RecentTakeover"
+                },
+                {
+                    "$type": ""
+                },
+                {
+                    "$type": ""
+                },
+                {
+                    "$type": ""
+                },
+                {
+                    "$type": ""
+                },
+                {
+                    "$type": ""
+                },
+                {
+                    "$type": ""
                 }
             ]
         }

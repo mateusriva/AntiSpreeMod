@@ -75,13 +75,13 @@ namespace AntiSpreeMod
         /// </summary>
         /// <param name="faction">The instance to update</param>
         /// <param name="value">The value to insert</param>
-        public void UpdateRegisterList(TIFactionState faction, int value)
-        {
-            if (AntiSpreeStateList.ContainsKey(faction.ID))
-            {
-                this[faction].LastAssassinationDate = value;
-            }
-        }
+        //public void UpdateRegisterList(TIFactionState faction, int value)
+        //{
+        //    if (AntiSpreeStateList.ContainsKey(faction.ID))
+        //    {
+        //        this[faction].LastAssassinationDate = value;
+        //    }
+        //}
 
         /// <summary>
         /// Clears the AntiSpreeStateList Dictionary
@@ -97,20 +97,31 @@ namespace AntiSpreeMod
         /// <param name="faction"></param>
         public void UpdateFactionLastAssassinationDate(TIFactionState faction)
         {
-            FileLog.Log("Entered the Manager Update");
-            FileLog.Log("AntiSpreeStateList is " + AntiSpreeStateList.ToString());
-            FileLog.Log("faction is " + faction.ToString());
-            FileLog.Log("faction.ID is " + faction.ID.ToString());
             if (AntiSpreeStateList.ContainsKey(faction.ID))
             {
-                FileLog.Log("Key was there");
-                this[faction].SetToNow();
+                this[faction].SetAssassinationToNow();
             }
             else
             {
-                FileLog.Log("Key was NOT there");
                 RegisterList(faction);
-                this[faction].SetToNow();
+                this[faction].SetAssassinationToNow();
+            }
+        }
+
+        /// <summary>
+        /// Set last takeover to today
+        /// </summary>
+        /// <param name="faction"></param>
+        public void UpdateFactionLastTakeoverDate(TIFactionState faction)
+        {
+            if (AntiSpreeStateList.ContainsKey(faction.ID))
+            {
+                this[faction].SetTakeoverToNow();
+            }
+            else
+            {
+                RegisterList(faction);
+                this[faction].SetTakeoverToNow();
             }
         }
     }
